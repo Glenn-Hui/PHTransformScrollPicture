@@ -1,5 +1,5 @@
 //
-//  PHTransform3DScrollPicture.swift
+//  PHTransformScrollPicture.swift
 //  ScrollPicture
 //
 //  Created by  on 2018/9/11.
@@ -7,15 +7,15 @@
 //
 
 import UIKit
-@objc protocol PHTransform3DScrollPictureDelegate:NSObjectProtocol {
-    func phTransform3DScrollPictureItemWidth()->CGFloat
-    func phTransform3DScrollPictureMinimumLineSpacing()->CGFloat
-    @objc optional func phTransform3DScrollPictureItemChange(index:Int)
-    @objc optional func phTransform3DScrollPictureSelect(index:Int)
+@objc protocol PHTransformScrollPictureDelegate:NSObjectProtocol {
+    func phTransformScrollPictureItemWidth()->CGFloat
+    func phTransformScrollPictureMinimumLineSpacing()->CGFloat
+    @objc optional func phTransformScrollPictureItemChange(index:Int)
+    @objc optional func phTransformScrollPictureSelect(index:Int)
 }
 private let SectionNum:Int = 11
-class PHTransform3DScrollPicture: UIView {
-    var delegate:PHTransform3DScrollPictureDelegate?
+class PHTransformScrollPicture: UIView {
+    var delegate:PHTransformScrollPictureDelegate?
     var hiddenPageControl:Bool = false{
         didSet{
             pageControl.isHidden = hiddenPageControl
@@ -54,11 +54,11 @@ class PHTransform3DScrollPicture: UIView {
         c.showsHorizontalScrollIndicator = false
         c.clipsToBounds = false
         c.decelerationRate = 0
-        c.register(PHTransform3DScrollPictureCell.self, forCellWithReuseIdentifier: "picture")
+        c.register(PHTransformScrollPictureCell.self, forCellWithReuseIdentifier: "picture")
         return c
     }()
-    private lazy var layout:PHTransform3DFlowLayout = {()->PHTransform3DFlowLayout in
-        let l = PHTransform3DFlowLayout()
+    private lazy var layout:PHTransformFlowLayout = {()->PHTransformFlowLayout in
+        let l = PHTransformFlowLayout()
         l.scrollDirection = .horizontal
         return l
     }()
@@ -120,10 +120,10 @@ class PHTransform3DScrollPicture: UIView {
     private func initialize(){
         defaultItemWidth = bounds.width/3
         
-        let sectionInsetLeft:CGFloat = (delegate?.phTransform3DScrollPictureMinimumLineSpacing() ?? defaultMinimumLineSpacing)/2
+        let sectionInsetLeft:CGFloat = (delegate?.phTransformScrollPictureMinimumLineSpacing() ?? defaultMinimumLineSpacing)/2
         layout.sectionInset = UIEdgeInsetsMake(0, sectionInsetLeft, 0, sectionInsetLeft)
         
-        let insetLeft = (bounds.width - (delegate?.phTransform3DScrollPictureItemWidth() ?? defaultItemWidth))/2 - sectionInsetLeft
+        let insetLeft = (bounds.width - (delegate?.phTransformScrollPictureItemWidth() ?? defaultItemWidth))/2 - sectionInsetLeft
         collectionView.contentInset = UIEdgeInsetsMake(0, insetLeft, 0, insetLeft)
         
     }
@@ -237,7 +237,7 @@ class PHTransform3DScrollPicture: UIView {
         lastIndex = centerIndexPath.item
         lastIndexPath = centerIndexPath
         pageControl.currentPage = lastIndex
-        delegate?.phTransform3DScrollPictureItemChange?(index:lastIndex)
+        delegate?.phTransformScrollPictureItemChange?(index:lastIndex)
     }
     
     private func getPreIndexPath(current:IndexPath)->IndexPath?{
@@ -282,7 +282,7 @@ class PHTransform3DScrollPicture: UIView {
 }
 
 // MARK: - delagate
-extension PHTransform3DScrollPicture:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
+extension PHTransformScrollPicture:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if pictureUrls.isEmpty{
             return 0
@@ -296,7 +296,7 @@ extension PHTransform3DScrollPicture:UICollectionViewDelegate,UICollectionViewDa
         return pictureUrls.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell:PHTransform3DScrollPictureCell = collectionView.dequeueReusableCell(withReuseIdentifier: "picture", for: indexPath) as! PHTransform3DScrollPictureCell
+        let cell:PHTransformScrollPictureCell = collectionView.dequeueReusableCell(withReuseIdentifier: "picture", for: indexPath) as! PHTransformScrollPictureCell
 //        cell.titleLabel.text = "\(indexPath.section)  \(indexPath.item)"
 //         cell.contentView.backgroundColor = UIColor(displayP3Red: CGFloat(arc4random()%256)/255.0, green: CGFloat(arc4random()%256)/255.0, blue: CGFloat(arc4random()%256)/255.0, alpha: 1)
         cell.contentView.backgroundColor = UIColor.blue
@@ -304,14 +304,14 @@ extension PHTransform3DScrollPicture:UICollectionViewDelegate,UICollectionViewDa
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let h = bounds.height > 10 ? bounds.height - 10 : 0
-        let w = delegate?.phTransform3DScrollPictureItemWidth() ?? defaultItemWidth
+        let w = delegate?.phTransformScrollPictureItemWidth() ?? defaultItemWidth
         return CGSize(width: w, height: h)
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return delegate?.phTransform3DScrollPictureMinimumLineSpacing() ?? defaultItemWidth
+        return delegate?.phTransformScrollPictureMinimumLineSpacing() ?? defaultItemWidth
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        delegate?.phTransform3DScrollPictureSelect?(index: indexPath.item)
+        delegate?.phTransformScrollPictureSelect?(index: indexPath.item)
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

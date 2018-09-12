@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PHTransform3DFlowLayout: UICollectionViewFlowLayout {
+class PHTransformFlowLayout: UICollectionViewFlowLayout {
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         let point = super.targetContentOffset(forProposedContentOffset: proposedContentOffset)
         let targetRect = CGRect(x: point.x, y: 0, width: collectionView!.bounds.width, height: collectionView!.bounds.height)

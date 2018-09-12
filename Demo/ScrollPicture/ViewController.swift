@@ -13,8 +13,8 @@ class ViewController: UIViewController {
     
     
     
-    private lazy var scrollPic:PHTransform3DScrollPicture = {()->PHTransform3DScrollPicture in
-       let scrollPicture = PHTransform3DScrollPicture(frame: CGRect(x: 10, y: 100, width: UIScreen.main.bounds.width-20, height: 150))
+    private lazy var scrollPic:PHTransformScrollPicture = {()->PHTransformScrollPicture in
+       let scrollPicture = PHTransformScrollPicture(frame: CGRect(x: 10, y: 100, width: UIScreen.main.bounds.width-20, height: 150))
         scrollPicture.delegate = self
         scrollPicture.onePactureCircle = true
         scrollPicture.autoCircle = false
@@ -23,7 +23,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(scrollPic)
-        scrollPic.pictureUrls = []
+        scrollPic.pictureUrls = ["",""]
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,18 +37,18 @@ class ViewController: UIViewController {
     
 
 }
-extension ViewController:PHTransform3DScrollPictureDelegate{
-    func phTransform3DScrollPictureItemWidth() -> CGFloat {
+extension ViewController:PHTransformScrollPictureDelegate{
+    func phTransformScrollPictureItemWidth() -> CGFloat {
         return 200
     }
     
-    func phTransform3DScrollPictureMinimumLineSpacing() -> CGFloat {
+    func phTransformScrollPictureMinimumLineSpacing() -> CGFloat {
         return -30
     }
-    func phTransform3DScrollPictureItemChange(index: Int) {
+    func phTransformScrollPictureItemChange(index: Int) {
         print(index)
     }
-    func phTransform3DScrollPictureSelect(index: Int) {
+    func phTransformScrollPictureSelect(index: Int) {
         print(index)
     }
     

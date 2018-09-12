@@ -1,5 +1,5 @@
 //
-//  PHTransform3DScrollPictureCell.swift
+//  PHTransformScrollPictureCell.swift
 //  ScrollPicture
 //
 //  Created by  on 2018/9/11.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PHTransform3DScrollPictureCell: UICollectionViewCell {
+class PHTransformScrollPictureCell: UICollectionViewCell {
     lazy var titleLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
     lazy var picture:UIImageView = {()->UIImageView in
         let p = UIImageView()
