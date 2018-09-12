@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class PHTimer {
+public class PHTimer {
     private let internalTimer: DispatchSourceTimer
     
     private var isRunning = false
