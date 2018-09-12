@@ -93,7 +93,7 @@ Pod::Spec.new do |s|
  s.source_files  = "PHTransform3DScrollPicture", "PHTransform3DScrollPicture/*.{h,m,swift}"
  #s.exclude_files = "Classes/Exclude"
 
- s.public_header_files = "PHTransform3DScrollPicture/PHTransform3DScrollPicture.swift"
+ #s.public_header_files = "PHTransform3DScrollPicture/PHTransform3DScrollPicture.swift"
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
