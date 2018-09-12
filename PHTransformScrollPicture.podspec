@@ -89,10 +89,10 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "ScrollPicture", "ScrollPicture/ScrollPicture/PHTransform3DScrollPicture/*"
+ s.source_files  = "PHTransform3DScrollPicture", "PHTransform3DScrollPicture/*.{h,m,swift}"
  #s.exclude_files = "Classes/Exclude"
 
- #s.public_header_files = "ScrollPicture/ScrollPicture/PHTransform3DScrollPicture/PHTransform3DScrollPicture"
+ #s.public_header_files = "PHTransform3DScrollPicture/PHTransform3DScrollPicture"
 
 
   # ――― Resources ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
