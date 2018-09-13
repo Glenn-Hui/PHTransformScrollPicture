@@ -1,2 +1,3 @@
 # PHTransformScrollPicture
-轮播图
+Swift
+pod "PHTransformScrollPicture"
