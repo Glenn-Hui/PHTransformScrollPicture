@@ -148,14 +148,15 @@ public class PHTransformScrollPicture: UIView {
                 self?.scrollPreOrNextItem(pre: false)
             })
         }
+    
         timer?.start()
     }
     private func removeTimer(){
         if (!autoCircle || pictureUrls.isEmpty){
             return
         }
-        
         timer?.suspend()
+        timer = nil
     }
     ///移动到上一个或下一个Item
     private func scrollPreOrNextItem(pre:Bool){

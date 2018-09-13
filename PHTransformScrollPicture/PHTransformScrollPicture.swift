@@ -32,7 +32,7 @@ public class PHTransformScrollPicture: UIView {
     public var imgContentModel:UIViewContentMode = .scaleAspectFill
     
     
-    public var pictureUrls:[String] = []{
+    var pictureUrls:[String] = []{
         didSet{
             pageControl.numberOfPages = pictureUrls.count
             collectionView.reloadData()
@@ -82,14 +82,14 @@ public class PHTransformScrollPicture: UIView {
     private var lastIndex:Int = 0
     private var lastIndexPath:IndexPath = IndexPath(item: 0, section: 0 )
     // MARK:外部调用
-    public func suspendTimer(){
+    func suspendTimer(){
         if (!autoCircle || pictureUrls.isEmpty){
             return
         }
         
         timer?.suspend()
     }
-    public func startTimer(){
+    func startTimer(){
         if (!autoCircle || pictureUrls.isEmpty){
             return
         }
@@ -148,14 +148,15 @@ public class PHTransformScrollPicture: UIView {
                 self?.scrollPreOrNextItem(pre: false)
             })
         }
+    
         timer?.start()
     }
     private func removeTimer(){
         if (!autoCircle || pictureUrls.isEmpty){
             return
         }
-        
         timer?.suspend()
+        timer = nil
     }
     ///移动到上一个或下一个Item
     private func scrollPreOrNextItem(pre:Bool){
