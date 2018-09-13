@@ -9,7 +9,7 @@
 import UIKit
 
 class PHTransformScrollPictureCell: UICollectionViewCell {
-    lazy var titleLabel:UILabel = UILabel(frame: CGRect(x: 10, y: 10, width: 50, height: 50))
+    
     lazy var picture:UIImageView = {()->UIImageView in
         let p = UIImageView()
         p.contentMode = .scaleAspectFill
@@ -19,7 +19,7 @@ class PHTransformScrollPictureCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(picture)
-        contentView.addSubview(titleLabel)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {

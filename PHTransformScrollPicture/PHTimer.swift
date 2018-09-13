@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class PHTimer {
+public class PHTimer {
     private let internalTimer: DispatchSourceTimer
     
     private var isRunning = false
@@ -131,7 +131,7 @@ extension PHTimer{
         }
     }
 }
-public class PHCountDownTimer {
+class PHCountDownTimer {
     
     private let internalTimer: PHTimer
     

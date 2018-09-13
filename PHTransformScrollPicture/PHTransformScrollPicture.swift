@@ -7,14 +7,15 @@
 //
 
 import UIKit
-@objc protocol PHTransformScrollPictureDelegate:NSObjectProtocol {
+import Kingfisher
+@objc public protocol PHTransformScrollPictureDelegate:NSObjectProtocol {
     func phTransformScrollPictureItemWidth()->CGFloat
     func phTransformScrollPictureMinimumLineSpacing()->CGFloat
     @objc optional func phTransformScrollPictureItemChange(index:Int)
     @objc optional func phTransformScrollPictureSelect(index:Int)
 }
 private let SectionNum:Int = 11
-class PHTransformScrollPicture: UIView {
+public class PHTransformScrollPicture: UIView {
     var delegate:PHTransformScrollPictureDelegate?
     var hiddenPageControl:Bool = false{
         didSet{
@@ -27,6 +28,8 @@ class PHTransformScrollPicture: UIView {
     var autoCircle:Bool = false
     ///间隔时长
     var duration:Int = 5
+    ///填充模式
+    var imgContentModel:UIViewContentMode = .scaleAspectFill
     
     
     var pictureUrls:[String] = []{
@@ -49,7 +52,7 @@ class PHTransformScrollPicture: UIView {
         let c = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         c.delegate = self
         c.dataSource = self
-        c.backgroundColor = UIColor.yellow
+        c.backgroundColor = UIColor.white
         c.showsVerticalScrollIndicator = false
         c.showsHorizontalScrollIndicator = false
         c.clipsToBounds = false
@@ -99,7 +102,7 @@ class PHTransformScrollPicture: UIView {
         setupUI()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         setupUI()
     }
@@ -109,7 +112,7 @@ class PHTransformScrollPicture: UIView {
         addSubview(collectionView)
         addSubview(pageControl)
     }
-    override func layoutSubviews() {
+    override public func layoutSubviews() {
         super.layoutSubviews()
         initialize()
         
@@ -183,9 +186,7 @@ class PHTransformScrollPicture: UIView {
     }
     ///移动到指定的Item
     private func scrollToItem(indexPath:IndexPath,animate:Bool){
-        
-//        collectionView.scrollToItem(at: indexPath, at: UICollectionViewScrollPosition.centeredHorizontally, animated: animate)
-        
+
         
         guard let attr = layout.layoutAttributesForItem(at: indexPath) else{
             return
@@ -196,31 +197,32 @@ class PHTransformScrollPicture: UIView {
         collectionView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: animate)
         
         if !animate{
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now()+0.1) {[weak self] in
-                self?.makeCenterCellToTop(indexPath: indexPath)
-            }
+            makeCenterCellToTop(indexPath: indexPath)
+            
         }
         
     }
     ///中间cell显示在顶部
     private func makeCenterCellToTop(indexPath:IndexPath?){
         
-        let centerPoint = convert(CGPoint(x: bounds.width/2, y: bounds.height/2), to: collectionView)
+        
         var centerIndexPath:IndexPath!
         if let path = indexPath{
             centerIndexPath = path
         }else{
+            let centerPoint = convert(CGPoint(x: bounds.width/2, y: bounds.height/2), to: collectionView)
             guard let path = collectionView.indexPathForItem(at: centerPoint) else{
                 return
             }
             centerIndexPath = path
         }
-        
-        
+
+
         let preIndexPath = getPreIndexPath(current: centerIndexPath)
         let nextIndexPath = getNextIndexPath(current: centerIndexPath)
-        
-        
+
+
+
         if let pre = preIndexPath,let cell = collectionView.cellForItem(at: pre){
             cell.layer.zPosition = 0
         }
@@ -230,7 +232,7 @@ class PHTransformScrollPicture: UIView {
         if let centerCell = collectionView.cellForItem(at: centerIndexPath){
             centerCell.layer.zPosition = 100
         }
-        
+
         if (lastIndexPath.item,lastIndexPath.section) == (centerIndexPath.item,centerIndexPath.section){
             return
         }
@@ -283,7 +285,7 @@ class PHTransformScrollPicture: UIView {
 
 // MARK: - delagate
 extension PHTransformScrollPicture:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
         if pictureUrls.isEmpty{
             return 0
         }else if pictureUrls.count == 1{
@@ -292,41 +294,53 @@ extension PHTransformScrollPicture:UICollectionViewDelegate,UICollectionViewData
             return SectionNum
         }
     }
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return pictureUrls.count
     }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell:PHTransformScrollPictureCell = collectionView.dequeueReusableCell(withReuseIdentifier: "picture", for: indexPath) as! PHTransformScrollPictureCell
-//        cell.titleLabel.text = "\(indexPath.section)  \(indexPath.item)"
-//         cell.contentView.backgroundColor = UIColor(displayP3Red: CGFloat(arc4random()%256)/255.0, green: CGFloat(arc4random()%256)/255.0, blue: CGFloat(arc4random()%256)/255.0, alpha: 1)
-        cell.contentView.backgroundColor = UIColor.blue
+        cell.picture.contentMode = imgContentModel
+        if let url = URL(string: pictureUrls[indexPath.item]){
+            cell.picture.kf.setImage(with: url)
+        }else{
+            cell.picture.image = nil
+        }
+        
+        
         return cell
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == lastIndexPath.row && indexPath.section == lastIndexPath.section{
+            cell.layer.zPosition = 100
+        }else{
+            cell.layer.zPosition = 0
+        }
+    }
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let h = bounds.height > 10 ? bounds.height - 10 : 0
         let w = delegate?.phTransformScrollPictureItemWidth() ?? defaultItemWidth
         return CGSize(width: w, height: h)
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return delegate?.phTransformScrollPictureMinimumLineSpacing() ?? defaultItemWidth
     }
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         delegate?.phTransformScrollPictureSelect?(index: indexPath.item)
     }
     
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         removeTimer()
     }
-    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+    public func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         addTimer()
     }
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         makeCenterCellToTop(indexPath: nil)
     }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         backToCenterSection()
     }
-    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+    public func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         backToCenterSection()
     }
     

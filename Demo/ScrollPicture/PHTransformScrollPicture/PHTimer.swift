@@ -131,7 +131,7 @@ extension PHTimer{
         }
     }
 }
-public class PHCountDownTimer {
+class PHCountDownTimer {
     
     private let internalTimer: PHTimer
     
