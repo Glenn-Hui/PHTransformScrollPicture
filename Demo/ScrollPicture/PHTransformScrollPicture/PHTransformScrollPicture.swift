@@ -16,20 +16,20 @@ import Kingfisher
 }
 private let SectionNum:Int = 11
 public class PHTransformScrollPicture: UIView {
-    var delegate:PHTransformScrollPictureDelegate?
-    var hiddenPageControl:Bool = false{
+    public var delegate:PHTransformScrollPictureDelegate?
+    public var hiddenPageControl:Bool = false{
         didSet{
             pageControl.isHidden = hiddenPageControl
         }
     }
     ///一张图片的时候是否循环
-    var onePactureCircle:Bool = false
+    public var onePactureCircle:Bool = false
     ///自动循环
-    var autoCircle:Bool = false
+    public var autoCircle:Bool = false
     ///间隔时长
-    var duration:Int = 5
+    public var duration:Int = 5
     ///填充模式
-    var imgContentModel:UIViewContentMode = .scaleAspectFill
+    public var imgContentModel:UIViewContentMode = .scaleAspectFill
     
     
     var pictureUrls:[String] = []{
