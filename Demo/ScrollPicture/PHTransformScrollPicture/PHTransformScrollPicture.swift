@@ -32,7 +32,7 @@ public class PHTransformScrollPicture: UIView {
     public var imgContentModel:UIViewContentMode = .scaleAspectFill
     
     
-    var pictureUrls:[String] = []{
+    public var pictureUrls:[String] = []{
         didSet{
             pageControl.numberOfPages = pictureUrls.count
             collectionView.reloadData()
@@ -82,14 +82,14 @@ public class PHTransformScrollPicture: UIView {
     private var lastIndex:Int = 0
     private var lastIndexPath:IndexPath = IndexPath(item: 0, section: 0 )
     // MARK:外部调用
-    func suspendTimer(){
+   public func suspendTimer(){
         if (!autoCircle || pictureUrls.isEmpty){
             return
         }
         
         timer?.suspend()
     }
-    func startTimer(){
+   public func startTimer(){
         if (!autoCircle || pictureUrls.isEmpty){
             return
         }
